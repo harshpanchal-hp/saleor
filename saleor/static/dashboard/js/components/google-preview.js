@@ -6,9 +6,10 @@ const $googleTitlePreview = $('#google-preview-title');
 const $googleDescriptionPreview = $('#google-preview-description');
 const $preview = $('.preview');
 const $previewErrors = $('.preview-error');
+const watchedEvents = 'input propertychange cut paste copy';
 
 function updatePlaceholderOnInput(field, seoField, previewField) {
-  field.on('input propertychange', (e) => {
+  field.on(watchedEvents, (e) => {
     const $target = $(e.currentTarget);
     const $placeholderText = $target.val();
     seoField.attr('placeholder', $placeholderText);
@@ -20,7 +21,9 @@ function updatePlaceholderOnInput(field, seoField, previewField) {
 }
 
 function updatePreviewOnInput(field, target) {
-  field.on('input propertychange', (e) => {
+  field.on(watchedEvents, (e) => {
+    $preview.show();
+    $previewErrors.hide();
     const $target = $(e.currentTarget);
     const $currentText = $target.val();
     if ($currentText) {

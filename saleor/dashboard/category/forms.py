@@ -22,6 +22,10 @@ class CategoryForm(forms.ModelForm):
             'description': pgettext_lazy(
                 'Description',
                 'Description')}
+        widgets = {
+            'seo_description': forms.Textarea(attrs={'placeholder': ''}),
+            'seo_title': forms.TextInput(attrs={'placeholder': ''}),
+        }
 
     def save(self, commit=True):
         self.instance.slug = slugify(unidecode(self.instance.name))
