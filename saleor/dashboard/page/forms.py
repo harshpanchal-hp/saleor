@@ -7,6 +7,17 @@ from ..product.forms import RichTextField
 
 class PageForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['seo_description'].widget.attrs = {
+            'id': 'seo_description',
+            'data-bind': self['content'].auto_id,
+            'placeholder': self.instance.content}
+        self.fields['seo_title'].widget.attrs = {
+            'id': 'seo_title',
+            'data-bind': self['title'].auto_id,
+            'placeholder': self.instance.title}
+
     class Meta:
         model = Page
         exclude = []

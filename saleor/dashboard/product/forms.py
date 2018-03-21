@@ -9,7 +9,7 @@ from django.utils.text import slugify
 from django.utils.translation import pgettext_lazy
 from mptt.forms import TreeNodeChoiceField
 
-from ...core.utils.text import generate_seo_description
+from ...core.utils.text import generate_seo_description, strip_html
 from ...product.models import (
     AttributeChoiceValue, Category, Collection, Product, ProductAttribute,
     ProductImage, ProductType, ProductVariant, Stock, StockLocation,
@@ -156,10 +156,6 @@ class ProductForm(forms.ModelForm):
                 'Featured product toggle', 'Feature this product on homepage'),
             'collections': pgettext_lazy(
                 'Add to collection select', 'Collections')}
-        widgets = {
-            'seo_description': forms.Textarea(attrs={'placeholder': ''}),
-            'seo_title': forms.TextInput(attrs={'placeholder': ''}),
-        }
 
     category = TreeNodeChoiceField(queryset=Category.objects.all())
     collections = forms.ModelMultipleChoiceField(
@@ -176,6 +172,15 @@ class ProductForm(forms.ModelForm):
         self.prepare_fields_for_attributes()
         self.fields["collections"].initial = Collection.objects.filter(
             products__name=self.instance)
+        self.fields['seo_description'].widget.attrs = {
+            'id': 'seo_description',
+            'data-bind': self['description'].auto_id,
+            'data-materialize': self['description'].html_name,
+            'placeholder': strip_html(self.instance.description)}
+        self.fields['seo_title'].widget.attrs = {
+            'id': 'seo_title',
+            'data-bind': self['name'].auto_id,
+            'placeholder': self.instance.name}
 
     def clean_seo_description(self):
         seo_description = self.cleaned_data['seo_description']

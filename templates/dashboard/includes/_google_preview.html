@@ -11,14 +11,14 @@
     </div> -->
     <div class="preview">
       <div class='title'>
-        <a id="google-preview-title" href='#'>{{ object.name|default:"" }}</a>
+        <a id="google-preview-title" href='#'>{{ object.seo_title|default:form.seo_title.field.widget.attrs.placeholder }}</a>
       </div>
       {% if object.pk %}
         <div class='url'>{% build_absolute_uri request=request location=object.get_absolute_url %}</div>
       {% else %}
         <div class='url'>{% build_absolute_uri request=request location="/" %}</div>
       {% endif %}
-      <div id="google-preview-description" class='description'>{{ object.seo_description|default:"" }}</div>
+      <div id="google-preview-description" class='description'>{{ object.seo_description|default:form.seo_description.field.widget.attrs.placeholder }}</div>
     </div>
   </div>
 </div>

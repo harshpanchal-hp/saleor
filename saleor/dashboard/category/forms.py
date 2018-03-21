@@ -10,7 +10,15 @@ from ...product.models import Category
 class CategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.parent_pk = kwargs.pop('parent_pk')
-        super(CategoryForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+        self.fields['seo_description'].widget.attrs = {
+            'id': 'seo_description',
+            'data-bind': self['description'].auto_id,
+            'placeholder': self.instance.description}
+        self.fields['seo_title'].widget.attrs = {
+            'id': 'seo_title',
+            'data-bind': self['name'].auto_id,
+            'placeholder': self.instance.name}
 
     class Meta:
         model = Category
@@ -22,10 +30,6 @@ class CategoryForm(forms.ModelForm):
             'description': pgettext_lazy(
                 'Description',
                 'Description')}
-        widgets = {
-            'seo_description': forms.Textarea(attrs={'placeholder': ''}),
-            'seo_title': forms.TextInput(attrs={'placeholder': ''}),
-        }
 
     def save(self, commit=True):
         self.instance.slug = slugify(unidecode(self.instance.name))

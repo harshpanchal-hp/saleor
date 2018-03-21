@@ -1,7 +1,16 @@
-const $seoTitle = $('#id_seo_title');
-const $seoDescription = $('#id_seo_description');
-const $name = $('#id_name');
-const $description = $('#id_description');
+const $seoTitle = $('#seo_title');
+const $nameId = $seoTitle.data('bind');
+const $name = $(`#${$nameId}`);
+
+const $seoDescription = $('#seo_description');
+const $descriptionMaterialize = $seoDescription.data('materialize');
+if ($descriptionMaterialize) {
+  var $description = $(`.materialize-textarea[name='${$descriptionMaterialize}']`);
+} else {
+  const $descriptionId = $seoDescription.data('bind');
+  var $description = $(`#${$nameId}`);
+}
+
 const $googleTitlePreview = $('#google-preview-title');
 const $googleDescriptionPreview = $('#google-preview-description');
 const $preview = $('.preview');
