@@ -15,14 +15,13 @@ const $googleTitlePreview = $('#google-preview-title');
 const $googleDescriptionPreview = $('#google-preview-description');
 const $preview = $('.preview');
 const $previewErrors = $('.preview-error');
+
 const watchedEvents = 'input propertychange cut paste copy change';
 
 function updatePlaceholderOnInput(field, seoField, previewField) {
   field.on(watchedEvents, (e) => {
     const $target = $(e.currentTarget);
     const $placeholderText = $target.val() || $target.text();
-    console.log($placeholderText);
-    console.log($target);
     seoField.attr('placeholder', $placeholderText);
     const $seoText = seoField.val();
     if (!$seoText) {

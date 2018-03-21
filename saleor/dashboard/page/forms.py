@@ -12,6 +12,7 @@ class PageForm(forms.ModelForm):
         self.fields['seo_description'].widget.attrs = {
             'id': 'seo_description',
             'data-bind': self['content'].auto_id,
+            'data-materialize': self['content'].html_name,
             'placeholder': self.instance.content}
         self.fields['seo_title'].widget.attrs = {
             'id': 'seo_title',
