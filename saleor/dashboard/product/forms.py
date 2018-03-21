@@ -156,6 +156,10 @@ class ProductForm(forms.ModelForm):
                 'Featured product toggle', 'Feature this product on homepage'),
             'collections': pgettext_lazy(
                 'Add to collection select', 'Collections')}
+        widgets = {
+            'seo_description': forms.Textarea(attrs={'placeholder': ''}),
+            'seo_title': forms.TextInput(attrs={'placeholder': ''}),
+        }
 
     category = TreeNodeChoiceField(queryset=Category.objects.all())
     collections = forms.ModelMultipleChoiceField(
