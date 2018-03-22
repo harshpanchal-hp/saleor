@@ -11,10 +11,13 @@ class CategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.parent_pk = kwargs.pop('parent_pk')
         super().__init__(*args, **kwargs)
+        field_maxlength = self.fields['seo_description'].max_length
+        # Placeholder should be no longer than fields maximum size
+        placeholder = self.instance.description[:field_maxlength]
         self.fields['seo_description'].widget.attrs = {
             'id': 'seo_description',
             'data-bind': self['description'].auto_id,
-            'placeholder': self.instance.description}
+            'placeholder': placeholder}
         self.fields['seo_title'].widget.attrs = {
             'id': 'seo_title',
             'data-bind': self['name'].auto_id,

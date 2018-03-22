@@ -10,11 +10,16 @@ class PageForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Placeholder should be no longer than fields maximum size
+        field_maxlength = self.fields['seo_description'].max_length
+        # Page's content contains htm tags which should be stripped
+        placeholder = generate_seo_description(
+            self.instance.content, field_maxlength)
         self.fields['seo_description'].widget.attrs = {
             'id': 'seo_description',
             'data-bind': self['content'].auto_id,
             'data-materialize': self['content'].html_name,
-            'placeholder': generate_seo_description(self.instance.content, 300)}
+            'placeholder': placeholder}
         self.fields['seo_title'].widget.attrs = {
             'id': 'seo_title',
             'data-bind': self['title'].auto_id,
