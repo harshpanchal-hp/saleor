@@ -1,8 +1,11 @@
 const $seoTitle = $('#seo_title');
+const $seoTitleMaxLength = $seoTitle.prop('maxLength');
+
 const $nameId = $seoTitle.data('bind');
 const $name = $(`#${$nameId}`);
 
 const $seoDescription = $('#seo_description');
+const $seoDescriptionMaxLength = $seoDescription.prop('maxLength');
 const $descriptionMaterialize = $seoDescription.data('materialize');
 if ($descriptionMaterialize) {
   var $description = $(`.materialize-textarea[name='${$descriptionMaterialize}']`);
@@ -18,30 +21,38 @@ const $previewErrors = $('.preview-error');
 
 const watchedEvents = 'input propertychange cut paste copy change';
 
-function updatePlaceholderOnInput(field, seoField, previewField) {
+function truncate(text, maxLength) {
+  if (maxLength === -1) {
+    console.log('Field maxlength is not defined');
+    return text;
+  }
+  return text.substring(text, maxLength);
+}
+
+function updatePlaceholderOnInput(field, seoField, previewField, maxLength) {
   field.on(watchedEvents, (e) => {
     const $target = $(e.currentTarget);
     const $placeholderText = $target.val() || $target.text();
-    seoField.attr('placeholder', $placeholderText);
+    seoField.attr('placeholder', truncate($placeholderText, maxLength));
     const $seoText = seoField.val();
     if (!$seoText) {
-      previewField.text($placeholderText);
+      previewField.text(truncate($placeholderText, maxLength));
     }
   });
 }
 
-function updatePreviewOnInput(field, target) {
-  field.on(watchedEvents, (e) => {
+function updatePreviewOnInput(seoField, previewField, maxLength) {
+  seoField.on(watchedEvents, (e) => {
     $preview.show();
     $previewErrors.hide();
     const $target = $(e.currentTarget);
     const $currentText = $target.val();
     if ($currentText) {
-      target.text($currentText);
+      previewField.text(truncate($currentText, maxLength));
     } else {
-      const $placeholderValue = field.attr('placeholder');
+      const $placeholderValue = seoField.attr('placeholder');
       if ($placeholderValue) {
-        target.text($placeholderValue);
+        previewField.text(truncate($placeholderValue, maxLength));
       } else {
         $preview.hide();
         $previewErrors.show();
@@ -50,7 +61,7 @@ function updatePreviewOnInput(field, target) {
   });
 }
 
-updatePlaceholderOnInput($name, $seoTitle, $googleTitlePreview);
-updatePlaceholderOnInput($description, $seoDescription, $googleDescriptionPreview);
-updatePreviewOnInput($seoTitle, $googleTitlePreview);
-updatePreviewOnInput($seoDescription, $googleDescriptionPreview);
+updatePlaceholderOnInput($name, $seoTitle, $googleTitlePreview, $seoTitleMaxLength);
+updatePlaceholderOnInput($description, $seoDescription, $googleDescriptionPreview, $seoDescriptionMaxLength);
+updatePreviewOnInput($seoTitle, $googleTitlePreview, $seoTitleMaxLength);
+updatePreviewOnInput($seoDescription, $googleDescriptionPreview, $seoDescriptionMaxLength);

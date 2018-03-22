@@ -172,15 +172,15 @@ class ProductForm(forms.ModelForm):
         self.prepare_fields_for_attributes()
         self.fields["collections"].initial = Collection.objects.filter(
             products__name=self.instance)
-        self.fields['seo_description'].widget.attrs = {
+        self.fields['seo_description'].widget.attrs.update({
             'id': 'seo_description',
             'data-bind': self['description'].auto_id,
             'data-materialize': self['description'].html_name,
-            'placeholder': strip_html(self.instance.description)}
-        self.fields['seo_title'].widget.attrs = {
+            'placeholder': strip_html(self.instance.description)})
+        self.fields['seo_title'].widget.attrs.update({
             'id': 'seo_title',
             'data-bind': self['name'].auto_id,
-            'placeholder': self.instance.name}
+            'placeholder': self.instance.name})
 
     def clean_seo_description(self):
         seo_description = self.cleaned_data['seo_description']
