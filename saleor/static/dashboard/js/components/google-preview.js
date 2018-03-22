@@ -10,7 +10,9 @@ if ($descriptionMaterialize) {
   $description = $(`.materialize-textarea[name='${$descriptionMaterialize}']`);
 } else {
   const $descriptionId = $seoDescription.data('bind');
-  $description = $(`#${$descriptionId}`);
+  if ($descriptionId) {
+    $description = $(`#${$descriptionId}`);
+  }
 }
 
 const $googleTitlePreview = $('#google-preview-title');
@@ -75,6 +77,8 @@ function updatePreviewOnInput(seoField, previewField) {
 
 checkForErrors();
 updatePlaceholderOnInput($name, $seoTitle, $googleTitlePreview);
-updatePlaceholderOnInput($description, $seoDescription, $googleDescriptionPreview);
+if ($description) {
+  updatePlaceholderOnInput($description, $seoDescription, $googleDescriptionPreview);
+}
 updatePreviewOnInput($seoTitle, $googleTitlePreview);
 updatePreviewOnInput($seoDescription, $googleDescriptionPreview);
