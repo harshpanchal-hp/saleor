@@ -5,11 +5,12 @@ const $name = $(`#${$nameId}`);
 
 const $seoDescription = $('#seo_description');
 const $descriptionMaterialize = $seoDescription.data('materialize');
+let $description = '';
 if ($descriptionMaterialize) {
-  var $description = $(`.materialize-textarea[name='${$descriptionMaterialize}']`);
+  $description = $(`.materialize-textarea[name='${$descriptionMaterialize}']`);
 } else {
   const $descriptionId = $seoDescription.data('bind');
-  var $description = $(`#${$descriptionId}`);
+  $description = $(`#${$descriptionId}`);
 }
 
 const $googleTitlePreview = $('#google-preview-title');
@@ -42,10 +43,6 @@ function checkForErrors() {
 
 function truncate(text, seoField) {
   const $fieldMaxLength = seoField.prop('maxLength');
-  if ($fieldMaxLength === -1) {
-    // console.log('Field maxlength is not defined');
-    return text;
-  }
   return text.substring(text, $fieldMaxLength);
 }
 
