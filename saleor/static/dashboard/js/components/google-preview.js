@@ -75,7 +75,7 @@ function truncate(text, seoField) {
 function updatePlaceholderOnInput(field, seoField, previewField) {
   field.on(watchedEvents, (e) => {
     const $target = $(e.currentTarget);
-    const $placeholderText = $target.val();
+    const $placeholderText = $target.val() || $target.text();
     seoField.attr('placeholder', truncate($placeholderText, seoField));
     const $seoText = seoField.val();
     if (!$seoText) {
