@@ -30,11 +30,14 @@ function setPlaceholderAndPreview(field, seoField, previewField) {
   previewField.text(seoField.val() || $placeholderText);
 }
 
-function updateCharsCount(field) {
-  const $fieldId = field.attr('id');
+function updateCharsCount(seoField) {
+  const $fieldId = seoField.attr('id');
   const $charCount = $(`span[data-bind=${$fieldId}]`);
-  const $fieldLength = field.val().length || field.attr('placeholder').length;
-  const $minRecommendedLength = field.attr('min-recommended-length');
+  let $fieldLength = seoField.val().length || seoField.text().length
+  if (!$fieldLength && seoField.attr('placeholder')) {
+    $fieldLength = seoField.attr('placeholder').length;
+  }
+  const $minRecommendedLength = seoField.attr('min-recommended-length');
   const $charCountWrapper = $charCount.parent();
   if ($fieldLength < $minRecommendedLength) {
     $charCountWrapper.addClass('red-text');
@@ -69,7 +72,10 @@ function checkForErrors() {
 
 function truncate(text, seoField) {
   const $fieldMaxLength = seoField.prop('maxLength');
-  return text.substring(text, $fieldMaxLength);
+  if (text && text.length > $fieldMaxLength) {
+    return text.substring(text, $fieldMaxLength);
+  }
+  return text;
 }
 
 function updatePlaceholderOnInput(field, seoField, previewField) {
@@ -102,14 +108,18 @@ function updatePreviewOnInput(seoField, previewField) {
 }
 
 if ($seoTitle.length) {
-  setPlaceholderAndPreview($name, $seoTitle, $googleTitlePreview);
-  updatePlaceholderOnInput($name, $seoTitle, $googleTitlePreview);
+  if ($name) {
+    setPlaceholderAndPreview($name, $seoTitle, $googleTitlePreview);
+    updatePlaceholderOnInput($name, $seoTitle, $googleTitlePreview);
+  }
   updatePreviewOnInput($seoTitle, $googleTitlePreview);
   updateCharsCount($seoTitle);
 }
 if ($seoDescription.length) {
-  setPlaceholderAndPreview($description, $seoDescription, $googleDescriptionPreview);
-  updatePlaceholderOnInput($description, $seoDescription, $googleDescriptionPreview);
+  if ($description) {
+    setPlaceholderAndPreview($description, $seoDescription, $googleDescriptionPreview);
+    updatePlaceholderOnInput($description, $seoDescription, $googleDescriptionPreview);
+  }
   updatePreviewOnInput($seoDescription, $googleDescriptionPreview);
   updateCharsCount($seoDescription);
 }
