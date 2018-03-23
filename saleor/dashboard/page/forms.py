@@ -1,10 +1,10 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
-from ...core.utils.text import generate_seo_description
+from ...core.utils.text import strip_html_and_truncate
 from ...page.models import Page
 from ..product.forms import RichTextField
-from ..seo.utils import SEO_HELP_TEXTS, SEO_LABELS
+from ..seo.utils import SEO_HELP_TEXTS, SEO_LABELS, prepare_seo_description
 
 
 class PageForm(forms.ModelForm):
@@ -14,7 +14,7 @@ class PageForm(forms.ModelForm):
         # Placeholder should be no longer than fields maximum size
         field_maxlength = self.fields['seo_description'].max_length
         # Page's content contains htm tags which should be stripped
-        placeholder = generate_seo_description(
+        placeholder = strip_html_and_truncate(
             self.instance.content, field_maxlength)
         self.fields['seo_description'].widget.attrs.update({
             'id': 'seo_description',
@@ -50,14 +50,8 @@ class PageForm(forms.ModelForm):
         return slug
 
     def clean_seo_description(self):
-        seo_description = self.cleaned_data['seo_description']
-
-        # if there is no SEO friendly description set,
-        # generate it from the HTML description
-        if not seo_description:
-            # get the non-safe description (has non escaped HTML tags in it)
-            description = self.data['description']
-
-            # generate a SEO friendly from HTML description
-            seo_description = generate_seo_description(description, 300)
+        seo_description = prepare_seo_description(
+            seo_description=self.cleaned_data['seo_description'],
+            html_description=self.data['content'],
+            max_length=self.fields['seo_description'].max_length)
         return seo_description

@@ -9,7 +9,7 @@ from django.utils.text import slugify
 from django.utils.translation import pgettext_lazy
 from mptt.forms import TreeNodeChoiceField
 
-from ...core.utils.text import generate_seo_description
+from ...core.utils.text import strip_html_and_truncate
 from ...product.models import (
     AttributeChoiceValue, Category, Collection, Product, ProductAttribute,
     ProductImage, ProductType, ProductVariant, Stock, StockLocation,
@@ -18,7 +18,7 @@ from ..forms import OrderedModelMultipleChoiceField
 from ..widgets import RichTextEditorWidget
 from .widgets import ImagePreviewWidget
 from . import ProductBulkAction
-from ..seo.utils import SEO_HELP_TEXTS, SEO_LABELS
+from ..seo.utils import SEO_HELP_TEXTS, SEO_LABELS, prepare_seo_description
 
 
 class RichTextField(forms.CharField):
@@ -178,7 +178,7 @@ class ProductForm(forms.ModelForm):
         # Placeholder should be no longer than fields maximum size
         field_maxlength = self.fields['seo_description'].max_length
         # Product's description contains htm tags which should be stripped
-        placeholder = generate_seo_description(
+        placeholder = strip_html_and_truncate(
             self.instance.description, field_maxlength)
         self.fields['seo_description'].widget.attrs.update({
             'id': 'seo_description',
@@ -191,18 +191,10 @@ class ProductForm(forms.ModelForm):
             'placeholder': self.instance.name})
 
     def clean_seo_description(self):
-        seo_description = self.cleaned_data['seo_description']
-
-        # if there is no SEO friendly description set,
-        # generate it from the HTML description
-        if not seo_description:
-            # get the non-safe description (has non escaped HTML tags in it)
-            product_description = self.data['description']
-
-            # generate a SEO friendly from HTML description
-            seo_description = generate_seo_description(
-                product_description, 300)
-
+        seo_description = prepare_seo_description(
+            seo_description=self.cleaned_data['seo_description'],
+            html_description=self.data['description'],
+            max_length=self.fields['seo_description'].max_length)
         return seo_description
 
     def prepare_fields_for_attributes(self):
