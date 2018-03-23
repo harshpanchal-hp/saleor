@@ -39,14 +39,9 @@ class CollectionForm(forms.ModelForm):
         if self.instance.pk:
             self.fields['products'].set_initial(self.instance.products.all())
         self.fields['seo_description'].widget.attrs.update({
-            'id': 'seo_description',
-            'data-bind': '',
-            'placeholder': '',
             'min-recommended-length': 130})
         self.fields['seo_title'].widget.attrs.update({
-            'id': 'seo_title',
             'data-bind': self['name'].auto_id,
-            'placeholder': self.instance.name[:70],
             'min-recommended-length': 25})
 
     def save(self, commit=True):

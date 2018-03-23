@@ -1,7 +1,6 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
-from ...core.utils.text import strip_html_and_truncate
 from ...page.models import Page
 from ..product.forms import RichTextField
 from ..seo.utils import SEO_HELP_TEXTS, SEO_LABELS, prepare_seo_description
@@ -11,20 +10,11 @@ class PageForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Placeholder should be no longer than fields maximum size
-        field_maxlength = self.fields['seo_description'].max_length
-        # Page's content contains htm tags which should be stripped
-        placeholder = strip_html_and_truncate(
-            self.instance.content, field_maxlength)
         self.fields['seo_description'].widget.attrs.update({
-            'id': 'seo_description',
             'data-bind': self['content'].auto_id,
-            'data-materialize': self['content'].html_name,
-            'placeholder': placeholder})
+            'data-materialize': self['content'].html_name})
         self.fields['seo_title'].widget.attrs.update({
-            'id': 'seo_title',
-            'data-bind': self['title'].auto_id,
-            'placeholder': self.instance.title})
+            'data-bind': self['title'].auto_id})
 
     class Meta:
         model = Page

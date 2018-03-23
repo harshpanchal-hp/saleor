@@ -72,9 +72,9 @@ def test_sanitize_page_content(page, default_category):
         'bolditalicHeadersubheaderquotelinkan evil()example')
 
 
-def test_set_product_seo_description(page):
+def test_set_page_seo_description(page):
     seo_description = (
-        'This is a dummy product. '
+        'This is a dummy page. '
         'HTML <b>shouldn\'t be removed</b> since it\'s a simple text field.')
     data = model_to_dict(page)
     data['price'] = 20
