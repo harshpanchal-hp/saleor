@@ -6,8 +6,8 @@ from text_unidecode import unidecode
 
 from ...product.models import Collection, Product
 from ..forms import AjaxSelect2MultipleChoiceField
-from ..widgets import CharsLeftWidget
 from ..seo.utils import SEO_HELP_TEXTS, SEO_LABELS
+from ..widgets import CharsLeftWidget
 
 
 class CollectionForm(forms.ModelForm):

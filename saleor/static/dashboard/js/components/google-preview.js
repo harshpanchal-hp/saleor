@@ -33,7 +33,7 @@ function setPlaceholderAndPreview(field, seoField, previewField) {
 function updateCharsCount(seoField) {
   const $fieldId = seoField.attr('id');
   const $charCount = $(`span[data-bind=${$fieldId}]`);
-  let $fieldLength = seoField.val().length || seoField.text().length
+  let $fieldLength = seoField.val().length || seoField.text().length;
   if (!$fieldLength && seoField.attr('placeholder')) {
     $fieldLength = seoField.attr('placeholder').length;
   }
